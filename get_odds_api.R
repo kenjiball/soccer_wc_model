@@ -1,40 +1,36 @@
-https://puntapi.com/odds/event/658072?derived=best&betTypes=fixed-win
+# get_odds_api.R
 
-odds_id <- 658072:658120
-odds_id <- odds_id[-658103]
--658103
+# Call packages
+library(curl)
+library(jsonlite)
 
-{  
-  "odds":[  
-    {  
-      "selectionId":6593441,
-      "type":"best",
-      "betType":"fixed-win",
-      "price":{  
-        "value":19.75,
-        "movement":-0.25
-      },
-      "bookmakerId":"sportsbetting"
-    },
-    {  
-      "selectionId":6593440,
-      "type":"best",
-      "betType":"fixed-win",
-      "price":{  
-        "value":6.5,
-        "movement":-0.1
-      },
-      "bookmakerId":"sportsbet"
-    },
-    {  
-      "selectionId":6593439,
-      "type":"best",
-      "betType":"fixed-win",
-      "price":{  
-        "value":1.2,
-        "movement":-0.05
-      },
-      "bookmakerId":"ladbrokes"
-    }
-    ]
+# Set working directory
+set(wc_wd)
+
+# Function to Read Player Data Json from API and save to file 
+grabData <- function(gameid,api_url,api_key){
+  # Create API call from gameid
+  API_str <- paste(api_url
+                   ,gameid
+                   ,api_key
+                   , sep = "", collapse = NULL)
+   # Call API to get data for a game
+  jsonData <- fromJSON(API_str)
+  #jsonDataPretty <- toJSON(jsonData, pretty = TRUE)
+  return(jsonData)
 }
+
+
+api_url_wc <- "https://puntapi.com/odds/event/"
+api_odds_key <- "?derived=best&betTypes=fixed-win" 
+
+
+game_id <- c(658072:658102,658104:658120)
+game_id
+length(odds_id)
+
+# Single game 
+grabData(658072,api_url_wc,api_odds_key)
+
+
+
