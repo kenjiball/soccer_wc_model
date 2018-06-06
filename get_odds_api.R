@@ -5,7 +5,7 @@ library(curl)
 library(jsonlite)
 
 # Set working directory
-set(wc_wd)
+setwd(wc_wd)
 
 # Function to Read Player Data Json from API and save to file 
 grabData <- function(gameid,api_url,api_key){
@@ -29,22 +29,30 @@ grabData <- function(gameid,api_url,api_key){
   return(jsonData2)
 }
 
+
+
+# function loop through all game ids
+grabData_all <- function(game_vector){
+    all_match_data <- data.frame()
+      
+    for(i in 1:length(game_vector)){
+    
+      event_data <- grabData(game_vector[i],api_url_wc,api_odds_key)
+      
+      all_match_data <- rbind(all_match_data,event_data)
+      
+      
+    }
+    return(all_match_data)
+}
+
+
+
 # set game id vector
 game_id <- c(658072:658102,658104:658120)
 
-# Single game 
-grabData(658072,api_url_wc,api_odds_key)
+# Run Function
+odds_data <- grabData_all(game_id)
 
-# loop through all game ids
-all_match_data <- data.frame()
-  
-for(i in 1:length(game_id)){
-
-  event_data <- grabData(game_id[i],api_url_wc,api_odds_key)
-  
-  all_match_data <- rbind(all_match_data,event_data)
-  
-}
-
-all_match_data
+# write.csv(odds_data,"odds_data.csv")
 
