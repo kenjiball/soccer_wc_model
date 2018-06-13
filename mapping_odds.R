@@ -34,8 +34,6 @@ match_data <- inner_join(event_df,names_df) %>%
                 inner_join(selectionid_df, by = c("joined_data.event_id")) %>%
                 inner_join(price_amt_df, by = c("joined_data.event_id")) %>%
                 inner_join(price_mvmt_df, by = c("joined_data.event_id"))
-  
-head(match_data)
 
 names(match_data) <- c("event_id","match_id","date"
                      ,"name_draw","name_team1","name_team2"
@@ -45,18 +43,17 @@ names(match_data) <- c("event_id","match_id","date"
                      )  
 
 # Mutate data to add in market perctage and implied probabilities
-match_data2 <- match_data %>% mutate(market_prct = (1/price_draw + 1/price_team1 + 1/price_team2)) %>% 
-                              mutate(market_prct_draw = (1/price_draw)/market_prct,
-                                     market_prct_team1 = (1/price_team1)/market_prct,
-                                     market_prct_team2 = (1/price_team2)/market_prct)
-
+match_data2 <- match_data %>% mutate(group = substr(match_id,1,1)) %>% 
+                              mutate(market_prct = (1/price_draw + 1/price_team1 + 1/price_team2)) %>% 
+                              mutate(market_prob_draw = (1/price_draw)/market_prct,
+                                     market_prob_team1 = (1/price_team1)/market_prct,
+                                     market_prob_team2 = (1/price_team2)/market_prct) 
 head(match_data2, 5)
 
 
-
 # Write to work sheet
-createSheet(workbook, name = "team_map")
-writeWorksheet(workbook,team_map,"team_map",startRow = 1, startCol =1, header = TRUE)
-saveWorkbook(workbook)
+#createSheet(workbook, name = "team_map")
+#writeWorksheet(workbook,team_map,"team_map",startRow = 1, startCol =1, header = TRUE)
+#saveWorkbook(workbook)
 
-
+write.csv(match_data2,"match_data3.csv")
